@@ -2,19 +2,11 @@ package org.elasticsearch.index.analysis;
 
 import com.hankcs.cfg.Configuration;
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
-import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.lucene.TokenizerBuilder;
-import com.hankcs.model.CRFNERecognizerInstance;
-import com.hankcs.model.CRFPOSTaggerInstance;
-import com.hankcs.model.CRFSegmenterInstance;
-import com.hankcs.model.PerceptronCWSInstance;
-import com.hankcs.model.PerceptronNERInstance;
-import com.hankcs.model.PerceptronPOSInstance;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
@@ -87,77 +79,10 @@ public class HanLPTokenizerFactory extends AbstractTokenizerFactory {
 
     @Override
     public Tokenizer create() {
-        switch (this.hanLPType) {
-            case INDEX:
-                configuration.enableIndexMode(true);
-                return TokenizerBuilder.tokenizer(AccessController.doPrivileged((PrivilegedAction<Segment>) () ->
-                                HanLP.newSegment().enableIndexMode(true)),
-                        configuration);
-            case NLP:
-                return TokenizerBuilder.tokenizer(AccessController.doPrivileged((PrivilegedAction<Segment>) () ->
-                                new PerceptronLexicalAnalyzer(
-                                        PerceptronCWSInstance.getInstance().getLinearModel(),
-                                        PerceptronPOSInstance.getInstance().getLinearModel(),
-                                        PerceptronNERInstance.getInstance().getLinearModel())
-                        ),
-                        configuration);
-            case CRF:
-                if (CRFPOSTaggerInstance.getInstance().getTagger() == null) {
-                    return TokenizerBuilder.tokenizer(
-                            AccessController.doPrivileged((PrivilegedAction<Segment>) () ->
-                                    new CRFLexicalAnalyzer(
-                                            CRFSegmenterInstance.getInstance().getSegmenter()
-                                    )),
-                            configuration);
-                } else if (CRFNERecognizerInstance.getInstance().getRecognizer() == null) {
-                    return TokenizerBuilder.tokenizer(
-                            AccessController.doPrivileged((PrivilegedAction<Segment>) () ->
-                                    new CRFLexicalAnalyzer(
-                                            CRFSegmenterInstance.getInstance().getSegmenter(),
-                                            CRFPOSTaggerInstance.getInstance().getTagger()
-                                    )),
-                            configuration);
-                } else {
-                    return TokenizerBuilder.tokenizer(
-                            AccessController.doPrivileged((PrivilegedAction<Segment>) () ->
-                                    new CRFLexicalAnalyzer(
-                                            CRFSegmenterInstance.getInstance().getSegmenter(),
-                                            CRFPOSTaggerInstance.getInstance().getTagger(),
-                                            CRFNERecognizerInstance.getInstance().getRecognizer()
-                                    )),
-                            configuration);
-                }
-            case N_SHORT:
-                configuration.enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
-                return TokenizerBuilder.tokenizer(
-                        AccessController.doPrivileged(
-                                (PrivilegedAction<Segment>) () -> new NShortSegment()
-                                        .enableCustomDictionary(false)
-                                        .enablePlaceRecognize(true)
-                                        .enableOrganizationRecognize(true)),
-                        configuration);
-            case DIJKSTRA:
-                configuration.enableCustomDictionary(false).enablePlaceRecognize(true).enableOrganizationRecognize(true);
-                return TokenizerBuilder.tokenizer(
-                        AccessController.doPrivileged(
-                                (PrivilegedAction<Segment>) () -> new DijkstraSegment()
-                                        .enableCustomDictionary(false)
-                                        .enablePlaceRecognize(true)
-                                        .enableOrganizationRecognize(true)),
-                        configuration);
-            case SPEED:
-                configuration.enableCustomDictionary(false);
-                return TokenizerBuilder.tokenizer(
-                        AccessController.doPrivileged(
-                                (PrivilegedAction<Segment>) () -> new DoubleArrayTrieSegment().enableCustomDictionary(false)
-                        ),
-                        configuration);
-            case HANLP:
-            case STANDARD:
-            default:
-                return TokenizerBuilder.tokenizer(
-                        AccessController.doPrivileged((PrivilegedAction<Segment>) HanLP::newSegment),
-                        configuration);
-        }
+        // The default HanLP segmenter uses HanLP's built-in dictionary.
+        // Keep the ES plugin independent from Perceptron/CRF model loading.
+        return TokenizerBuilder.tokenizer(
+                AccessController.doPrivileged((PrivilegedAction<Segment>) HanLP::newSegment),
+                configuration);
     }
 }
