@@ -58,15 +58,6 @@ public class AnalysisHanLPPlugin extends Plugin implements AnalysisPlugin {
         Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>();
 
         extra.put("hanlp", HanLPTokenizerFactory::getHanLPTokenizerFactory);
-        extra.put("hanlp_standard", HanLPTokenizerFactory::getHanLPStandardTokenizerFactory);
-        extra.put("hanlp_index", HanLPTokenizerFactory::getHanLPIndexTokenizerFactory);
-
-        extra.put("hanlp_nlp", HanLPTokenizerFactory::getHanLPNLPTokenizerFactory);
-        extra.put("hanlp_crf", HanLPTokenizerFactory::getHanLPCRFTokenizerFactory);
-
-        extra.put("hanlp_n_short", HanLPTokenizerFactory::getHanLPNShortTokenizerFactory);
-        extra.put("hanlp_dijkstra", HanLPTokenizerFactory::getHanLPDijkstraTokenizerFactory);
-        extra.put("hanlp_speed", HanLPTokenizerFactory::getHanLPSpeedTokenizerFactory);
 
         return extra;
     }
@@ -76,15 +67,6 @@ public class AnalysisHanLPPlugin extends Plugin implements AnalysisPlugin {
         Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> extra = new HashMap<>();
 
         extra.put("hanlp", HanLPAnalyzerProvider::getHanLPAnalyzerProvider);
-        extra.put("hanlp_standard", HanLPAnalyzerProvider::getHanLPStandardAnalyzerProvider);
-        extra.put("hanlp_index", HanLPAnalyzerProvider::getHanLPIndexAnalyzerProvider);
-
-        extra.put("hanlp_nlp", HanLPAnalyzerProvider::getHanLPNLPAnalyzerProvider);
-        extra.put("hanlp_crf", HanLPAnalyzerProvider::getHanLPCRFAnalyzerProvider);
-
-        extra.put("hanlp_n_short", HanLPAnalyzerProvider::getHanLPNShortAnalyzerProvider);
-        extra.put("hanlp_dijkstra", HanLPAnalyzerProvider::getHanLPDijkstraAnalyzerProvider);
-        extra.put("hanlp_speed", HanLPAnalyzerProvider::getHanLPSpeedAnalyzerProvider);
 
         return extra;
     }
