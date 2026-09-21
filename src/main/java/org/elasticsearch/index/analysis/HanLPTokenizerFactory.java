@@ -2,18 +2,11 @@ package org.elasticsearch.index.analysis;
 
 import com.hankcs.cfg.Configuration;
 import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
-import com.hankcs.hanlp.seg.NShort.NShortSegment;
-import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
-import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.lucene.TokenizerBuilder;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * Project: elasticsearch-analysis-hanlp
@@ -77,12 +70,19 @@ public class HanLPTokenizerFactory extends AbstractTokenizerFactory {
         return new HanLPTokenizerFactory(indexSettings, env, name, settings, HanLPType.SPEED);
     }
 
-    @Override
+    /*@Override
     public Tokenizer create() {
         // The default HanLP segmenter uses HanLP's built-in dictionary.
         // Keep the ES plugin independent from Perceptron/CRF model loading.
         return TokenizerBuilder.tokenizer(
                 AccessController.doPrivileged((PrivilegedAction<Segment>) HanLP::newSegment),
+                configuration);
+    }*/
+
+    @Override
+    public Tokenizer create() {
+        return TokenizerBuilder.tokenizer(
+                HanLP.newSegment(),
                 configuration);
     }
 }

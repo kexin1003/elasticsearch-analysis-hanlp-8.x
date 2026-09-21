@@ -5,51 +5,58 @@
       <excludes>
         <exclude>org.elasticsearch:elasticsearch</exclude>
       </excludes>
-      <outputDirectory>analysis-hanlp/</outputDirectory>
+      <outputDirectory>/</outputDirectory>
       <useProjectArtifact>true</useProjectArtifact>
       <useTransitiveFiltering>true</useTransitiveFiltering>
     </dependencySet>
+
     <dependencySet>
       <includes>
         <include>org.apache.httpcomponents:httpclient</include>
       </includes>
-      <outputDirectory>analysis-hanlp/</outputDirectory>
+      <outputDirectory>/</outputDirectory>
       <useProjectArtifact>true</useProjectArtifact>
       <useTransitiveFiltering>true</useTransitiveFiltering>
     </dependencySet>
   </dependencySets>
+
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/config</directory>
       <outputDirectory>config</outputDirectory>
     </fileSet>
   </fileSets>
+
   <files>
     <file>
       <fileMode>0755</fileMode>
       <filtered>true</filtered>
-      <outputDirectory>analysis-hanlp/</outputDirectory>
+      <outputDirectory>/</outputDirectory>
       <source>${project.basedir}/src/main/resources/plugin-descriptor.properties</source>
     </file>
+
     <file>
       <fileMode>0755</fileMode>
       <filtered>true</filtered>
-      <outputDirectory>analysis-hanlp/config/</outputDirectory>
+      <outputDirectory>config/</outputDirectory>
       <source>${project.basedir}/src/main/resources/config/hanlp-remote.xml</source>
     </file>
+
     <file>
       <fileMode>0755</fileMode>
       <filtered>true</filtered>
-      <outputDirectory>analysis-hanlp/config/</outputDirectory>
+      <outputDirectory>config/</outputDirectory>
       <source>${project.basedir}/src/main/resources/config/hanlp.properties</source>
     </file>
+
     <file>
       <fileMode>0755</fileMode>
       <filtered>true</filtered>
-      <outputDirectory>analysis-hanlp/</outputDirectory>
+      <outputDirectory>/</outputDirectory>
       <source>${project.basedir}/src/main/resources/plugin-security.policy</source>
     </file>
   </files>
+
   <formats>
     <format>zip</format>
   </formats>
